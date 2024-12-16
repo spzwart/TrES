@@ -3,7 +3,8 @@ from amuse.datamodel import Particles
 from amuse.units import units
 from seculartriple_TPS.interface import SecularTriple
 
-from TRES_options import max_mass, absolute_min_mass
+from TRES_options import max_mass, absolute_min_mass, USE_MESA_AS_STELLAR_CODE
+from MESA_setup import setup_mesa_stars
 
 from interactions import *
 from tidal_friction_constant import *
@@ -168,7 +169,9 @@ def make_particle_sets(inner_primary_mass, inner_secondary_mass, outer_mass,
 
 def setup_stellar_code(stellar_code, stars):
     stellar_code.particles.add_particles(stars)
-    return stellar_code 
+    if USE_MESA_AS_STELLAR_CODE:
+        setup_mesa_stars(stellar_code)
+    return stellar_code
 
                     
 def setup_secular_code(triple, secular_code, stop_at_semisecular_regime):

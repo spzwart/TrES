@@ -1432,8 +1432,8 @@ class Triple_Class:
             if REPORT_DT or REPORT_DEBUG:
                 print('min increase', time_step, maximum_time_step_factor*self.previous_dt)   
                 
-                                             
-            time_step = min(time_step, maximum_time_step_factor*self.previous_dt)  
+            #maybe not relevant with MESA                                 
+            time_step = min(time_step, maximum_time_step_factor*self.previous_dt) 
 
 
         elif self.has_donor() and self.triple.bin_type == 'detached' and self.triple.child2.bin_type == 'detached':
@@ -2355,7 +2355,8 @@ class Triple_Class:
             dt = self.determine_time_step()  
             if not no_stellar_evolution: 
                 self.update_previous_stellar_parameters()
-                self.stellar_code.particles.refresh_memory()
+                if not USE_MESA_AS_STELLAR_CODE: # for now, refresh_memory and recall_memory_one_step not available in MESA interface
+                    self.stellar_code.particles.refresh_memory()
             self.triple.time += dt   
             self.previous_dt = dt         
             if REPORT_DEBUG or REPORT_DT:
@@ -2380,8 +2381,10 @@ class Triple_Class:
                                 
                 successfull_step, nr_unsuccessfull, star_unsuccessfull = self.safety_check_time_step() 
                 while successfull_step == False:
-                    successfull_step, nr_unsuccessfull, star_unsuccessfull = self.recall_memory_one_step_stellar(nr_unsuccessfull, star_unsuccessfull)
-
+                    if not USE_MESA_AS_STELLAR_CODE: # for now, refresh_memory and recall_memory_one_step not available in MESA interface
+                        successfull_step, nr_unsuccessfull, star_unsuccessfull = self.recall_memory_one_step_stellar(nr_unsuccessfull, star_unsuccessfull)
+                    else:
+                        successfull_step = True
                 # if SN has taken place
                 if self.has_stellar_type_changed_into_SN_remnant():
                     if REPORT_TRIPLE_EVOLUTION:
@@ -2397,7 +2400,8 @@ class Triple_Class:
 #                    self.rewind_to_begin_of_rlof_stellar(dt) 
 #                    print('RLOF:', self.triple.child2.child1.is_donor, self.triple.bin_type , self.triple.child2.bin_type )
 
-                    self.stellar_code.particles.recall_memory_one_step()
+                    if not USE_MESA_AS_STELLAR_CODE: # for now, refresh_memory and recall_memory_one_step not available in MESA interface
+                        self.stellar_code.particles.recall_memory_one_step()
                     self.copy_from_stellar()
                     self.update_stellar_parameters()   
                     if self.include_CHE:#only needed when including CHE
@@ -2475,7 +2479,8 @@ class Triple_Class:
                         print('stopping conditions stellar 2')                    
                         break                   
 
-                    self.rewind_to_begin_of_rlof_secular()
+                    if not USE_MESA_AS_STELLAR_CODE: # for now, refresh_memory and recall_memory_one_step not available in MESA interface
+                        self.rewind_to_begin_of_rlof_secular()
                     self.triple.child2.semimajor_axis = previous_semimajor_axis_in
                     self.triple.child2.eccentricity = previous_eccentricity_in
                     self.triple.child2.previous_argument_of_pericenter_in = previous_argument_of_pericenter_in

@@ -17,6 +17,7 @@ REPORT_MASS_TRANSFER_STABILITY = False
 GET_GYRATION_RADIUS_FROM_STELLAR_CODE = False
 GET_AMC_FROM_STELLAR_CODE = False
 no_stellar_evolution = False
+USE_MESA_AS_STELLAR_CODE = False
 
 #--------------------------------------------------------------------------------------------------------------------
 #TRES constants
@@ -30,6 +31,8 @@ error_dm = 0.05
 #maximum_radius_change_factor = 0.005
 error_dr = 0.05 #0.01
 minimum_time_step = 1.e-9 |units.Myr
+if USE_MESA_AS_STELLAR_CODE:
+    minimum_time_step = 1.e-7 |units.Myr
 
 max_mass = 100 |units.MSun
 min_mass = 0.08 |units.MSun # for primary stars

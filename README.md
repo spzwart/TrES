@@ -6,7 +6,7 @@ TRES is a numerical framework for simulating hierarchical triple systems with st
 Mass transfer from one star to another and the consequential effect to the orbital dynamics is realized via heuristic recipes.
 These recipes are combined with  three-body  dynamics and stellar evolution inluding their mutual influences. 
 
-TRES includes the effects of common-envelope evolution, circularized stable mass transfer, tides, gravitational wave emission and up-to-date stellar evolution through SeBa. Other stellar evolution codes such as SSE can also be used. Coming soon: TRES with MESA, transition to N-body calculations (including stellar evolution and dissipative processes) when the system's evolution is not secular anymore. 
+TRES includes the effects of common-envelope evolution, circularized stable mass transfer, tides, gravitational wave emission and up-to-date stellar evolution through SeBa. Other stellar evolution codes such as SSE or MESA can also be used. Coming soon: transition to N-body calculations (including stellar evolution and dissipative processes) when the system's evolution is not secular anymore. 
 
 This document contains the following parts:
 
@@ -15,6 +15,8 @@ This document contains the following parts:
 [Simple examples](#Simple-examples-of-runs)
 
 [TRES-Exo for exoplanet research](#TRES-Exo-for-exoplanet-research)
+
+[TRES with MESA](#TRES-with-MESA)
 
 [Understanding the TRES output](#Understanding-the-TRES-output)
 
@@ -350,6 +352,13 @@ and use the rdc_TRES.py and rdc_TRES_csv.py to read the output and print it in r
 python TRES.py --M1 1.33 --M2 1.06 --M3 0.0046 --Ain 26.35 --Aout 3012.9 --Ein 0.3 --Eout 0.1 -i 1.7 -T 11000  --no_stop_at_mass_transfer -f 'testRun_2.hdf'
 ```
 
+## TRES with MESA
+
+TRES can now be run with MESA as stellar code. To do so, you simply need to switch option 'USE_MESA_AS_STELLAR_CODE' in TRES_options.py to True. In this case, we also advise to switch to True 'GET_GYRATION_RADIUS_FROM_STELLAR_CODE' and 'GET_AMC_FROM_STELLAR_CODE'. These physical quantities are in this case obtained directly from the structure of the star.
+
+If you want to change settings within MESA, this can be done in AMUSE through "particles.set_control('name_of_control', value)". For TRES, we provide the script MESA_setup.py which already sets a few MESA controls. The choice of input physics was made in order to be the closest to the SeBa defaults. More details can be found in Sciarini et al. 2025 (in prep.).
+
+The list of MESA controls can be found in https://github.com/MESAHub/mesa/blob/r15140/star/defaults/controls.defaults.    
 
 
 ## Understanding the TRES output
